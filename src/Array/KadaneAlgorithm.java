@@ -34,3 +34,4 @@ public class KadaneAlgorithm {
         return maxSum;
     }
 }
+// If all elements negative mod needed

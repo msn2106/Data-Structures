@@ -27,24 +27,18 @@ class DeleteNode{
 }
 
 class Gfg{
+    //deletes nodes from position not index
     Node deleteNode(Node head, int x)
     {
         // Your code here
-        Node temp = head;
-        int index = 0;
         if(x==1){
             head = head.next;
             return head;
         }
-        if(x==2){
-            head.next = head.next.next;
-            return head;
-        }
-        while(index < (x-2) && temp.next !=null){
+        Node temp = head;
+        while(x-- > 2){
             temp = temp.next;
-            index++;
         }
-        assert temp.next != null;
         temp.next = temp.next.next;
         return head;
     }
