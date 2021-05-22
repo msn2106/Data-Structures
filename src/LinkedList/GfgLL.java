@@ -1,5 +1,8 @@
 package LinkedList;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public class GfgLL {
 
     class Node{
@@ -13,7 +16,7 @@ public class GfgLL {
     static Node head;
 
     //finding length - iterative
-    int length(){
+    static int length(){
         int l = 0;
         GfgLL.Node temp = head;
         while(temp != null){
@@ -121,15 +124,20 @@ public class GfgLL {
     }
 
     //function to create loop
-    public static void makeLoop(Node head, Node tail, int x){
-        if(x==0) return;
-        Node current = head;
+    public static void makeLoop(Node head, int x, int y){
+        if(x==0 || x > length() || y > length()) return;
+        Node loopTail = head;
 
-        for (int i = 0; i < x; i++) {
-            current = current.next;
+        for (int i = 0; loopTail != null && i < x; i++) {
+            loopTail = loopTail.next;
         }
-        tail.next = current;
-        tail.next = head;
+
+        Node loopHead = head;
+        for (int i = 0; loopHead != null && i < y; i++) {
+            loopHead = loopHead.next;
+        }
+
+        loopTail.next = loopHead;
     }
 
     //Function to check if the linked list has a loop.
@@ -154,6 +162,106 @@ public class GfgLL {
             }
         }
         return false;
+    }
+
+    //function to detect loop length - no. of elements in the loop
+    public static int detectLoopCount(){
+        //method 1 -
+        int count = 0;
+        Node slow = head, fast = head;
+        while(slow != null && fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                count = 1;
+                Node temp = slow.next;
+                while(temp != slow){
+                    count++;
+                    temp = temp.next;
+                }
+                return count;
+            }
+        }
+        return  count;
+    }
+
+    // check if LL is palindrome or not
+    boolean isPalindrome(Node head) {
+        // Method 1 - o(3n/2) - it was 8ms on leetcode - mycode
+//        Node temp = head;
+//        int count = 0;
+//        Stack<Integer> st = new Stack<Integer>();
+//        while(temp != null){
+//            st.push(temp.data);
+//            count++;
+//            temp = temp.next;
+//        }
+//        temp = head;
+//
+//        for(int i=0;i<count/2 && temp!= null;i++){
+//            if(st.pop() != temp.data){
+//                return false;
+//            }
+//            temp = temp.next;
+//        }
+//        return true;
+
+        //method 2 - lot better - idk why on leetcode it was 2ms
+        ArrayList<Integer> arr = new ArrayList();
+        while(head != null){
+            arr.add(head.data);
+            head = head.next;
+        }
+        int start = 0;
+        int end = arr.size()-1;
+        while(start < end){
+            if(!arr.get(start).equals(arr.get(end))) return false;
+            start++;
+            end--;
+        }
+        return true;
+
+        // method 3 - 1ms on leetcode - uses head directly
+//        if (head == null || head.next == null) return true;
+//
+//        Node newHead = null;
+//        Node fast = head;
+//
+//        while (fast != null) {
+//            if (fast.next == null) {
+//                head = head.next;
+//                break;
+//            } else {
+//                fast = fast.next.next;
+//            }
+//
+//            Node next = head.next;
+//            head.next = newHead;
+//            newHead = head;
+//            head = next;
+//        }
+//
+//        while (newHead != null) {
+//            if (newHead.data != head.data) return false;
+//            newHead = newHead.next;
+//            head = head.next;
+//        }
+//
+//        return true;
+    }
+
+    // function to remove duplicate in LL
+    Node removeDuplicatesInSortedLL(Node head)
+    {
+        // Your code here
+        Node temp = head;
+        while(temp != null && temp.next != null){
+            if(temp.data == temp.next.data){
+                temp.next = temp.next.next;
+            }
+            else temp = temp.next;
+        }
+        return head;
     }
 
     //iterative method to print LL
@@ -192,14 +300,28 @@ public class GfgLL {
 
         System.out.println("The middle element of the LL is:"+ gl.getMiddle(head));
 
-        System.out.println("The length of the LL is:"+gl.length());
-        int x = 5;
-        if(x < gl.length()){
-            makeLoop(head, head.next.next, x);
-        }else System.out.println("Length exceeded.");
+        System.out.println("The length of the LL is:"+ length());
 
-        System.out.println("Is there a loop ?:"+ detectLoop(head));
+//        int x = 9;
+//        int y = 3;
+//        if(x < length()){
+//            makeLoop(head, x , y);
+//        }else System.out.println("Length exceeded.");
+//
+//        System.out.println("Is there a loop ?:"+ detectLoop(head));
+//
+//        System.out.println("Loop count:"+ detectLoopCount());
 
+        gl.printLL();
+        System.out.println("Is palindrome: "+ gl.isPalindrome(head));
+        gl.printLL();
+        gl.push(9);
+
+        gl.printLL();
+
+        gl.removeDuplicatesInSortedLL(head);
+
+        gl.printLL();
 
     }
 }
